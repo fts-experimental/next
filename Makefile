@@ -18,3 +18,9 @@ type:
 
 summary:
 	echo src | python3 generate_project_summary.py
+
+ck-boiler:
+	git checkout boilerplate
+
+ck-main:
+	git checkout main
