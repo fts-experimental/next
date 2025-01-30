@@ -21,3 +21,7 @@ http://localhost:10002
 ### Prisma Studio にアクセス
 
 http://localhost:10003
+
+# ドキュメント
+
+- [fetcher ヘルパー関数](src/docs/fetcher.md)
