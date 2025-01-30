@@ -11,6 +11,7 @@
     "tsc": "tsc --noEmit --watch"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.65.1",
     "next": "15.1.6",
     "openapi-fetch": "^0.13.4",
     "react": "^19.0.0",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@tanstack/eslint-plugin-query": "^5.65.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
