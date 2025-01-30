@@ -1,0 +1,39 @@
+networks:
+  fts-experimental:
+    external: true
+
+volumes:
+  exp-next-db:
+
+services:
+  exp-next-app:
+    container_name: exp-next-app
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/app
+    working_dir: /app
+    restart: always
+    tty: true
+    ports:
+      - 10002:3000
+      - 10003:5555
+    depends_on:
+      - exp-next-db
+
+  exp-next-db:
+    container_name: exp-next-db
+    image: postgres:17.0
+    restart: always
+    tty: true
+    volumes:
+      - exp-next-db:/var/lib/postgresql/data
+    ports:
+      - 20002:5432
+    networks:
+      - fts-experimental
+    environment:
+      POSTGRES_DB: exp-next-db
+      POSTGRES_USER: ${POSTGRES_USER:-dbuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
