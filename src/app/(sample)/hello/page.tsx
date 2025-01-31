@@ -1,3 +1,9 @@
+import { Message } from "@/features/hello/components/message";
+
 export default function HelloPage() {
-  return <div>hello</div>;
+  return (
+    <div>
+      <Message />
+    </div>
+  );
 }

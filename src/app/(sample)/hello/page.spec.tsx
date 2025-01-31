@@ -1,12 +1,23 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import HelloPage from "@/app/(sample)/hello/page";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 describe("HelloPage", () => {
   it("helloと表示される", async () => {
-    render(<HelloPage />);
+    const queryClient = new QueryClient();
 
-    const element = screen.getByText("hello");
-    expect(element).toBeInTheDocument();
-    expect(element.tagName).toBe("DIV");
+    render(<HelloPage />, {
+      wrapper: ({ children }) => (
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      ),
+    });
+
+    await waitFor(() => {
+      const element = screen.getByText("hello");
+      expect(element).toBeInTheDocument();
+      expect(element.tagName).toBe("DIV");
+    });
   });
 });
