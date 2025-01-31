@@ -1,11 +1,6 @@
 import { Result, ok, err } from "neverthrow";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-
-interface FetcherOptions extends Omit<RequestInit, "body"> {
-  method?: HttpMethod;
-  body?: unknown;
-}
+type FetchArgs = Parameters<typeof fetch>;
 
 export class FetchError extends Error {
   constructor(
@@ -18,40 +13,18 @@ export class FetchError extends Error {
 }
 
 export async function fetcher<TResponse>(
-  url: string,
-  options: FetcherOptions = {}
+  url: FetchArgs[0],
+  args?: FetchArgs[1]
 ): Promise<Result<TResponse, FetchError>> {
-  const {
-    method = "GET",
-    body,
-    headers: customHeaders = {},
-    ...restOptions
-  } = options;
-
-  const headers = {
-    "Content-Type": "application/json",
-    ...customHeaders,
-  };
-
-  const config: RequestInit = {
-    method,
-    headers,
-    ...restOptions,
-  };
-
-  if (body) {
-    config.body = JSON.stringify(body);
-  }
-
   try {
-    const response = await fetch(url, config);
+    const response = await fetch(url, args);
 
     if (!response.ok) {
       return err(new FetchError(response.status, response.statusText));
     }
 
-    const data = await response.json();
-    return ok(data as TResponse);
+    const data: TResponse = await response.json();
+    return ok(data);
   } catch (error) {
     return err(
       new FetchError(

@@ -15,6 +15,7 @@ describe("fetcher", () => {
       expect(result.isOk()).toBe(true);
       expect(result.value.id).toBeTypeOf("number");
       expect(result.value.username).toBeTypeOf("string");
+      expect(result.value.username).toBe("emilys");
     }
   });
 
@@ -25,13 +26,16 @@ describe("fetcher", () => {
     };
     const result = await fetcher<MockUser>(`${mockApiUrl}/users/add`, {
       method: "POST",
-      body: mockUser,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(mockUser),
     });
     if (result.isOk()) {
       expect(result.isOk()).toBe(true);
       expect(result.value.id).toBeTypeOf("number");
       expect(result.value.username).toBeTypeOf("string");
-      expect(result.value.username).toBe(mockUser.username);
+      expect(result.value.username).toBe("test_user");
     }
   });
 
