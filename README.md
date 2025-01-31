@@ -25,3 +25,4 @@ http://localhost:10003
 # ドキュメント
 
 - [fetcher ヘルパー関数](src/docs/fetcher.md)
+- [Hono](src/docs/hono.md)
