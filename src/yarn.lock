@@ -2159,6 +2159,11 @@ hasown@^2.0.0, hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
+hono@^4.6.19:
+  version "4.6.19"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-4.6.19.tgz#2b9daa01282061acd907c64a73fbd43f1a58e541"
+  integrity sha512-Xw5DwU2cewEsQ1DkDCdy6aBJkEBARl5loovoL1gL3/gw81RdaPbXrNJYp3LoQpzpJ7ECC/1OFi/vn3UZTLHFEw==
+
 https-proxy-agent@^7.0.4:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz#da8dfeac7da130b05c2ba4b59c9b6cd66611a6b9"
