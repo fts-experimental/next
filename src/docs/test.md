@@ -7,3 +7,9 @@
 ### テストコード
 
 [hello/page.spec.tsx](<../app/(sample)/hello/page.spec.tsx>) を参照してください。
+
+# カスタムフックのテスト
+
+### テストコード
+
+[use-hello.spec.tsx](../features/hello/hooks/use-hello.spec.tsx) を参照してください。
