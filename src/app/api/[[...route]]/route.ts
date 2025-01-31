@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import hello from "@/app/features/hello/api/route";
+import hello from "@/features/hello/api/route";
 export const runtime = "edge";
 
 const app = new Hono().basePath("/api");
