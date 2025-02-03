@@ -22,7 +22,7 @@ yarn add hono
 
 # 使い方
 
-[route.spec.ts](../app/features/hello/api/route.spec.ts) を参照してください。
+[route.spec.ts](../features/hello/api/route.spec.ts) を参照してください。
 
 # 参考
 
