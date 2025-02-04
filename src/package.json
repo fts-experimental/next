@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "tsc": "tsc --noEmit --watch"
+    "tsc": "tsc --noEmit --watch",
+    "openapi:keycloak": "openapi-typescript https://www.keycloak.org/docs-api/latest/rest-api/openapi.json -o ./types/openapi/keycloak.d.ts"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.12.0",
