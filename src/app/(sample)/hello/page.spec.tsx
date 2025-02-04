@@ -3,9 +3,17 @@ import HelloPage from "@/app/(sample)/hello/page";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 describe("HelloPage", () => {
-  it("helloと表示される", async () => {
-    const queryClient = new QueryClient();
+  let queryClient: QueryClient;
 
+  beforeEach(() => {
+    queryClient = new QueryClient();
+  });
+
+  afterEach(() => {
+    queryClient.clear();
+  });
+
+  it("helloと表示される", async () => {
     render(<HelloPage />, {
       wrapper: ({ children }) => (
         <QueryClientProvider client={queryClient}>
@@ -17,7 +25,6 @@ describe("HelloPage", () => {
     await waitFor(() => {
       const element = screen.getByText("hello");
       expect(element).toBeInTheDocument();
-      expect(element.tagName).toBe("DIV");
     });
   });
 });

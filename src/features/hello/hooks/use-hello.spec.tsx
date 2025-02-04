@@ -3,9 +3,17 @@ import { useHello } from "@/features/hello/hooks/use-hello";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 describe("useHello", () => {
-  it("APIから取得したデータを返す", async () => {
-    const queryClient = new QueryClient();
+  let queryClient: QueryClient;
 
+  beforeEach(() => {
+    queryClient = new QueryClient();
+  });
+
+  afterEach(() => {
+    queryClient.clear();
+  });
+
+  it("APIから正常にデータを取得する", async () => {
     const { result } = renderHook(() => useHello(), {
       wrapper: ({ children }) => (
         <QueryClientProvider client={queryClient}>
@@ -15,10 +23,8 @@ describe("useHello", () => {
     });
 
     await waitFor(() => {
-      expect(result.current.data?.isOk()).toBe(true);
-      if (result.current.data?.isOk()) {
-        expect(result.current.data?.value.message).toBe("hello");
-      }
+      expect(result.current.isSuccess).toBe(true);
+      expect(result.current.data?._unsafeUnwrap().message).toBe("hello");
     });
   });
 });
