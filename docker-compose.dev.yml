@@ -21,6 +21,8 @@ services:
       - 10003:5555
     depends_on:
       - exp-next-db
+    networks:
+      - fts-experimental
 
   exp-next-db:
     container_name: exp-next-db
