@@ -1,9 +1,23 @@
 import { env } from "@/config/env";
-import { client } from "@/libs/openapi";
+import { getAccessToken } from "@/libs/get-access-token";
+import { client } from "./openapi";
 import { paths } from "@/types/openapi/keycloak";
 
-const keycloakClient = () => {
-  return client<paths>({ baseUrl: env.KEYCLOAK_BASE_URL });
-};
+export const keycloakClient = {
+  getUsers: async () => {
+    const accessToken = await getAccessToken();
 
-export { keycloakClient };
+    return client<paths>({
+      baseUrl: env.KEYCLOAK_BASE_URL,
+    }).GET("/admin/realms/{realm}/users", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: {
+        path: {
+          realm: env.KEYCLOAK_REALM,
+        },
+      },
+    });
+  },
+};

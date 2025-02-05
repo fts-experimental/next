@@ -1,25 +1,25 @@
 import { env } from "@/config/env";
 import { getAccessToken } from "@/libs/get-access-token";
-import { keycloakClient } from "@/libs/keycloak-client";
+import { client } from "./openapi";
+import { paths } from "@/types/openapi/keycloak";
 
 describe("keycloak-client", () => {
   it("ユーザーを取得する", async () => {
-    const kc = keycloakClient();
-
     const accessToken = await getAccessToken();
 
-    const { data, error } = await kc.GET("/admin/realms/{realm}/users", {
+    const { data, error } = await client<paths>({
+      baseUrl: env.KEYCLOAK_BASE_URL,
+    }).GET("/admin/realms/{realm}/users", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
       params: {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         path: {
           realm: env.KEYCLOAK_REALM,
         },
       },
     });
 
-    console.log(data);
     expect(data).toBeDefined();
     expect(error).toBeUndefined();
   });
