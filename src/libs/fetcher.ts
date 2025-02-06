@@ -1,21 +1,22 @@
-import { FetchError, FetchResult } from "@/types/openapi/fetch";
-import { ok, err } from "neverthrow";
+import { FetchError, hundleResponse, SuccessType } from "@/libs/result";
+import { err, ResultAsync } from "neverthrow";
 
 type FetchArgs = Parameters<typeof fetch>;
 
+/**
+ * @description fetch関数のラッパー関数
+ * @param url リクエスト先のURL
+ * @param args fetch関数の引数
+ * @returns レスポンスのResult型
+ */
 export async function fetcher<TResponse>(
   url: FetchArgs[0],
   args?: FetchArgs[1]
-): Promise<FetchResult<TResponse>> {
+): Promise<ResultAsync<SuccessType<TResponse>, FetchError>> {
   try {
     const response = await fetch(url, args);
 
-    if (!response.ok) {
-      return err(new FetchError(response.status, response.statusText));
-    }
-
-    const data: TResponse = await response.json();
-    return ok(data);
+    return await hundleResponse<TResponse>(response);
   } catch (error) {
     return err(
       new FetchError(

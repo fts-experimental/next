@@ -1,5 +1,5 @@
-import { fetcher } from "./fetcher";
-import type { FetchError } from "./fetcher";
+import { fetcher } from "@/libs/fetcher";
+import type { FetchError } from "@/libs/result";
 
 describe("fetcher", () => {
   beforeEach(() => {
