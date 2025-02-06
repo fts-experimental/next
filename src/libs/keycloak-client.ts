@@ -4,19 +4,29 @@ import { client } from "@/libs/openapi";
 import { components, paths } from "@/types/openapi/keycloak";
 import { hundleResponse } from "@/libs/result";
 
-const getUsers = async () => {
+// Keycloakクライアントの共通設定を作成する関数
+const createKeycloakClient = async () => {
   const accessToken = await getAccessToken();
-
-  return client<paths>({
-    baseUrl: env.KEYCLOAK_BASE_URL,
-  }).GET("/admin/realms/{realm}/users", {
+  return {
+    client: client<paths>({
+      baseUrl: env.KEYCLOAK_BASE_URL,
+    }),
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    pathParams: {
+      realm: env.KEYCLOAK_REALM,
+    },
+  };
+};
+
+const getUsers = async () => {
+  const { client, headers, pathParams } = await createKeycloakClient();
+
+  return client.GET("/admin/realms/{realm}/users", {
+    headers,
     params: {
-      path: {
-        realm: env.KEYCLOAK_REALM,
-      },
+      path: pathParams,
     },
   });
 };
@@ -24,18 +34,12 @@ const getUsers = async () => {
 type UserRepresentation = components["schemas"]["UserRepresentation"];
 
 const createUser = async (user: UserRepresentation) => {
-  const accessToken = await getAccessToken();
+  const { client, headers, pathParams } = await createKeycloakClient();
 
-  const { response } = await client<paths>({
-    baseUrl: env.KEYCLOAK_BASE_URL,
-  }).POST("/admin/realms/{realm}/users", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+  const { response } = await client.POST("/admin/realms/{realm}/users", {
+    headers,
     params: {
-      path: {
-        realm: env.KEYCLOAK_REALM,
-      },
+      path: pathParams,
     },
     body: user,
   });
