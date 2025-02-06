@@ -1,21 +1,12 @@
-import { Result, ok, err } from "neverthrow";
+import { FetchError, FetchResult } from "@/types/openapi/fetch";
+import { ok, err } from "neverthrow";
 
 type FetchArgs = Parameters<typeof fetch>;
-
-export class FetchError extends Error {
-  constructor(
-    public readonly status: number,
-    public readonly statusText: string,
-    message?: string
-  ) {
-    super(message ?? `HTTP error! status: ${status} ${statusText}`);
-  }
-}
 
 export async function fetcher<TResponse>(
   url: FetchArgs[0],
   args?: FetchArgs[1]
-): Promise<Result<TResponse, FetchError>> {
+): Promise<FetchResult<TResponse>> {
   try {
     const response = await fetch(url, args);
 
