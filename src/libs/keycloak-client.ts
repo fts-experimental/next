@@ -3,7 +3,7 @@ import { getAccessToken } from "@/libs/get-access-token";
 import { client } from "@/libs/openapi";
 import { components, paths } from "@/types/openapi/keycloak";
 import { FetchError, handleResponse } from "@/libs/result";
-import { err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 // Keycloakクライアントの共通設定を作成する関数
 const createKeycloakClient = async () => {
@@ -21,13 +21,15 @@ const createKeycloakClient = async () => {
   };
 };
 
-export const getUserId = async (email: string) => {
+export const getUserId = async (
+  email: string
+): Promise<Result<string, FetchError>> => {
   const result = await findUser(email);
   if (result.isErr()) {
     return err(new FetchError(result.error.status, result.error.statusText));
   }
 
-  return ok(result.value.id);
+  return ok(result.value.id!);
 };
 
 export const findUser = async (email: string) => {
@@ -88,4 +90,27 @@ export const createUser = async (user: UserRepresentation) => {
   const createdUser = result.value;
 
   return await handleResponse<UserRepresentation>(response, createdUser);
+};
+
+export const setPassword = async (userId: string, password: string) => {
+  const { client, headers, pathParams } = await createKeycloakClient();
+
+  const { response } = await client.PUT(
+    "/admin/realms/{realm}/users/{user-id}/reset-password",
+    {
+      headers,
+      params: {
+        path: {
+          ...pathParams,
+          "user-id": userId,
+        },
+      },
+      body: {
+        type: "password",
+        value: password,
+      },
+    }
+  );
+
+  return await handleResponse<string>(response, userId);
 };

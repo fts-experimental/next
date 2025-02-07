@@ -3,6 +3,7 @@ import {
   createUser,
   findUser,
   getUserId,
+  setPassword,
 } from "@/libs/keycloak-client";
 import { v4 as uuid } from "uuid";
 
@@ -45,6 +46,14 @@ describe("keycloak-client", () => {
     expect(result._unsafeUnwrap().email).toBe(email);
   });
 
-  it.todo("パスワードを設定する");
+  it("パスワードを新規設定する", async () => {
+    const userId = (await getUserId("test@example.com"))._unsafeUnwrap();
+    const result = await setPassword(userId, "password");
+
+    expect(result.isOk()).toBe(true);
+    expect(result._unsafeUnwrap()).toBeDefined();
+    expect(result._unsafeUnwrap()).toBe(userId);
+  });
+
   it.todo("パスワードの再設定メールを送信する");
 });
