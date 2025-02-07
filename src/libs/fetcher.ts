@@ -1,4 +1,4 @@
-import { FetchError, hundleResponse, SuccessType } from "@/libs/result";
+import { FetchError, handleResponse, SuccessType } from "@/libs/result";
 import { err, ResultAsync } from "neverthrow";
 
 type FetchArgs = Parameters<typeof fetch>;
@@ -16,7 +16,7 @@ export async function fetcher<TResponse>(
   try {
     const response = await fetch(url, args);
 
-    return await hundleResponse<TResponse>(response);
+    return await handleResponse<TResponse>(response);
   } catch (error) {
     return err(
       new FetchError(

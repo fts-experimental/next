@@ -2,7 +2,7 @@ import { env } from "@/config/env";
 import { getAccessToken } from "@/libs/get-access-token";
 import { client } from "@/libs/openapi";
 import { components, paths } from "@/types/openapi/keycloak";
-import { hundleResponse } from "@/libs/result";
+import { handleResponse } from "@/libs/result";
 
 // Keycloakクライアントの共通設定を作成する関数
 const createKeycloakClient = async () => {
@@ -49,7 +49,7 @@ const createUser = async (user: UserRepresentation) => {
     email: "user1@example.com",
   };
 
-  return await hundleResponse<UserRepresentation>(response, createdUser);
+  return await handleResponse<UserRepresentation>(response, createdUser);
 };
 
 export { getUsers, createUser };

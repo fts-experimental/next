@@ -19,7 +19,7 @@ export type SuccessType<TResponse> = TResponse;
  * @param result リクエスト成功時に空値が返される場合のレスポンスを指定
  * @returns レスポンスの結果
  */
-export const hundleResponse = async <TResponse>(
+export const handleResponse = async <TResponse>(
   response: Response,
   result?: TResponse
 ): Promise<Result<SuccessType<TResponse>, FetchError>> => {
