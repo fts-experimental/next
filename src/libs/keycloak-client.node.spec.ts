@@ -4,10 +4,11 @@ import { v4 as uuid } from "uuid";
 
 describe("keycloak-client", () => {
   it("ユーザーを取得する", async () => {
-    const { data, error } = await getUsers();
+    const result = await getUsers();
 
-    expect(data).toBeDefined();
-    expect(error).toBeUndefined();
+    expect(result.isOk()).toBe(true);
+    expect(result._unsafeUnwrap()).toBeDefined();
+    expect(result._unsafeUnwrap().length).toBeGreaterThan(0);
   });
 
   it("ユーザーを作成する", async () => {

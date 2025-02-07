@@ -23,12 +23,17 @@ const createKeycloakClient = async () => {
 const getUsers = async () => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
-  return client.GET("/admin/realms/{realm}/users", {
+  const { data, response } = (await client.GET("/admin/realms/{realm}/users", {
     headers,
     params: {
       path: pathParams,
     },
-  });
+  })) as {
+    data: UserRepresentation[];
+    response: Response;
+  };
+
+  return await handleResponse<UserRepresentation[]>(response, data);
 };
 
 type UserRepresentation = components["schemas"]["UserRepresentation"];
