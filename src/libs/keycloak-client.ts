@@ -20,7 +20,28 @@ const createKeycloakClient = async () => {
   };
 };
 
-const getUsers = async () => {
+export const findUser = async (email: string) => {
+  const { client, headers, pathParams } = await createKeycloakClient();
+
+  const { data, response } = (await client.GET("/admin/realms/{realm}/users", {
+    headers,
+    params: {
+      path: pathParams,
+      query: {
+        email,
+        exact: true,
+      },
+    },
+  })) as {
+    data: UserRepresentation[];
+    response: Response;
+  };
+
+  const user = data[0];
+  return await handleResponse<UserRepresentation>(response, user);
+};
+
+export const findAllUsers = async () => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
   const { data, response } = (await client.GET("/admin/realms/{realm}/users", {
@@ -38,7 +59,7 @@ const getUsers = async () => {
 
 type UserRepresentation = components["schemas"]["UserRepresentation"];
 
-const createUser = async (user: UserRepresentation) => {
+export const createUser = async (user: UserRepresentation) => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
   const { response } = await client.POST("/admin/realms/{realm}/users", {
@@ -49,12 +70,12 @@ const createUser = async (user: UserRepresentation) => {
     body: user,
   });
 
-  // TODO: getUser関数を作成し、作成したユーザーを返却するようにする
-  const createdUser: UserRepresentation = {
-    email: "user1@example.com",
-  };
+  const result = await findUser(user.email!);
+  if (result.isErr()) {
+    return result;
+  }
+
+  const createdUser = result.value;
 
   return await handleResponse<UserRepresentation>(response, createdUser);
 };
-
-export { getUsers, createUser };
