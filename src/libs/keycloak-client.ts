@@ -2,7 +2,8 @@ import { env } from "@/config/env";
 import { getAccessToken } from "@/libs/get-access-token";
 import { client } from "@/libs/openapi";
 import { components, paths } from "@/types/openapi/keycloak";
-import { handleResponse } from "@/libs/result";
+import { FetchError, handleResponse } from "@/libs/result";
+import { err, ok } from "neverthrow";
 
 // Keycloakクライアントの共通設定を作成する関数
 const createKeycloakClient = async () => {
@@ -18,6 +19,15 @@ const createKeycloakClient = async () => {
       realm: env.KEYCLOAK_REALM,
     },
   };
+};
+
+export const getUserId = async (email: string) => {
+  const result = await findUser(email);
+  if (result.isErr()) {
+    return err(new FetchError(result.error.status, result.error.statusText));
+  }
+
+  return ok(result.value.id);
 };
 
 export const findUser = async (email: string) => {
