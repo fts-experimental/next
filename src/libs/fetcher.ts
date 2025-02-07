@@ -1,5 +1,5 @@
 import { FetchError, handleResponse, SuccessType } from "@/libs/result";
-import { err, ResultAsync } from "neverthrow";
+import { err, Result } from "neverthrow";
 
 type FetchArgs = Parameters<typeof fetch>;
 
@@ -12,11 +12,15 @@ type FetchArgs = Parameters<typeof fetch>;
 export async function fetcher<TResponse>(
   url: FetchArgs[0],
   args?: FetchArgs[1]
-): Promise<ResultAsync<SuccessType<TResponse>, FetchError>> {
+): Promise<Result<SuccessType<TResponse>, FetchError>> {
   try {
     const response = await fetch(url, args);
+    let data = {} as TResponse;
+    if (response.ok) {
+      data = await response.json();
+    }
 
-    return await handleResponse<TResponse>(response);
+    return await handleResponse<TResponse>(response, data);
   } catch (error) {
     return err(
       new FetchError(

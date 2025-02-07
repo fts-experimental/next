@@ -14,23 +14,19 @@ export type SuccessType<TResponse> = TResponse;
 
 /**
  * @description レスポンスを処理するユーティリティ関数。
- * リクエスト成功時に空値が返される場合のレスポンスを指定することができる。
- * @param response レスポンス
- * @param result リクエスト成功時に空値が返される場合のレスポンスを指定
+ * APIから空値が返される場合のレスポンスを指定することができる。
+ * @param response ハンドリングしたいレスポンス
+ * @param result 呼び出し元に返したいレスポンス。
+ * APIから受け取るレスポンスボディが空値の場合は任意の値を指定する。
  * @returns レスポンスの結果
  */
 export const handleResponse = async <TResponse>(
   response: Response,
-  result?: TResponse
+  result: TResponse
 ): Promise<Result<SuccessType<TResponse>, FetchError>> => {
   if (!response.ok) {
     return err(new FetchError(response.status, response.statusText));
   }
 
-  if (result) {
-    return ok(result);
-  }
-
-  const data: TResponse = await response.json();
-  return ok(data);
+  return ok(result);
 };
