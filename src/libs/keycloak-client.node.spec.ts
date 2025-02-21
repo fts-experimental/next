@@ -1,15 +1,9 @@
-import {
-  findAllUsers,
-  createUser,
-  findUser,
-  getUserId,
-  setPassword,
-} from "@/libs/keycloak-client";
+import { keycloakClient as kc } from "@/libs/keycloak-client";
 import { v4 as uuid } from "uuid";
 
 describe("keycloak-client", () => {
   it("ユーザーIDを取得する", async () => {
-    const result = await getUserId("test@example.com");
+    const result = await kc.getUserId("test@example.com");
 
     expect(result.isOk()).toBe(true);
     expect(result._unsafeUnwrap()).toBeDefined();
@@ -19,7 +13,7 @@ describe("keycloak-client", () => {
   });
 
   it("単一のユーザーを取得する", async () => {
-    const result = await findUser("test@example.com");
+    const result = await kc.findUser("test@example.com");
 
     expect(result.isOk()).toBe(true);
     expect(result._unsafeUnwrap()).toBeDefined();
@@ -27,7 +21,7 @@ describe("keycloak-client", () => {
   });
 
   it("すべてのユーザーを取得する", async () => {
-    const result = await findAllUsers();
+    const result = await kc.findAllUsers();
 
     expect(result.isOk()).toBe(true);
     expect(result._unsafeUnwrap()).toBeDefined();
@@ -36,7 +30,7 @@ describe("keycloak-client", () => {
 
   it("ユーザーを作成する", async () => {
     const email = `${uuid()}@example.com`;
-    const result = await createUser({
+    const result = await kc.createUser({
       email,
       enabled: true,
     });
@@ -47,8 +41,8 @@ describe("keycloak-client", () => {
   });
 
   it("パスワードを新規設定する", async () => {
-    const userId = (await getUserId("test@example.com"))._unsafeUnwrap();
-    const result = await setPassword(userId, "password");
+    const userId = (await kc.getUserId("test@example.com"))._unsafeUnwrap();
+    const result = await kc.setPassword(userId, "password");
 
     expect(result.isOk()).toBe(true);
     expect(result._unsafeUnwrap()).toBeDefined();

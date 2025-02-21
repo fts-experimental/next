@@ -21,7 +21,7 @@ const createKeycloakClient = async () => {
   };
 };
 
-export const getUserId = async (
+const getUserId = async (
   email: string
 ): Promise<Result<string, FetchError>> => {
   const result = await findUser(email);
@@ -32,7 +32,7 @@ export const getUserId = async (
   return ok(result.value.id!);
 };
 
-export const findUser = async (email: string) => {
+const findUser = async (email: string) => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
   const { data, response } = (await client.GET("/admin/realms/{realm}/users", {
@@ -53,7 +53,7 @@ export const findUser = async (email: string) => {
   return await handleResponse<UserRepresentation>(response, user);
 };
 
-export const findAllUsers = async () => {
+const findAllUsers = async () => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
   const { data, response } = (await client.GET("/admin/realms/{realm}/users", {
@@ -71,7 +71,7 @@ export const findAllUsers = async () => {
 
 type UserRepresentation = components["schemas"]["UserRepresentation"];
 
-export const createUser = async (user: UserRepresentation) => {
+const createUser = async (user: UserRepresentation) => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
   const { response } = await client.POST("/admin/realms/{realm}/users", {
@@ -92,7 +92,7 @@ export const createUser = async (user: UserRepresentation) => {
   return await handleResponse<UserRepresentation>(response, createdUser);
 };
 
-export const setPassword = async (userId: string, password: string) => {
+const setPassword = async (userId: string, password: string) => {
   const { client, headers, pathParams } = await createKeycloakClient();
 
   const { response } = await client.PUT(
@@ -113,4 +113,12 @@ export const setPassword = async (userId: string, password: string) => {
   );
 
   return await handleResponse<string>(response, userId);
+};
+
+export const keycloakClient = {
+  getUserId,
+  findUser,
+  findAllUsers,
+  createUser,
+  setPassword,
 };
