@@ -1,3 +1,5 @@
+"use client";
+
 import { useHello } from "@/features/hello/hooks/use-hello";
 
 export const Message = () => {
