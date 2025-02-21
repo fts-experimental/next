@@ -1,4 +1,5 @@
 import { db } from "@/libs/db-queries";
+import { keycloakClient as kc } from "@/libs/keycloak-client";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
@@ -41,9 +42,10 @@ const app = new Hono().post(
 
     // DBにユーザーが存在するか確認
     const dbUser = await db.findUser(email);
+    // IdPにユーザーが存在するか確認
+    const idpUser = await kc.findUser(email);
 
-    if (dbUser) {
-      // IdPにユーザーが存在するか確認
+    if (dbUser && idpUser.isOk()) {
       /**
        * ユーザーが存在する場合
        * ユーザーのメールアドレスに、メールアドレスが入力されたことを知らせるメールを送信する。
@@ -67,7 +69,8 @@ const app = new Hono().post(
        */
 
       // メールを送信する
-      const message = "";
+      const message =
+        "お使いのメールアドレスを使用したユーザー登録の試行がありました";
       await sendMail(email, message);
 
       return c.json({
@@ -83,7 +86,7 @@ const app = new Hono().post(
      * ご登録いただきありがとうございます。
      * 以下のボタンをクリックしてメールアドレスを認証し、登録手続きを完了してください。
      */
-    const message = "";
+    const message = "ご登録いただきありがとうございます。";
     await sendMail(email, message);
 
     return c.json({
