@@ -1,4 +1,4 @@
-import { findUser } from "@/libs/find-user";
+import { findUser } from "@/libs/db-queries";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
