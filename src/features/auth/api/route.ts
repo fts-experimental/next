@@ -1,11 +1,13 @@
+import { env } from "@/config/env";
 import { db } from "@/libs/db-queries";
 import { keycloakClient as kc } from "@/libs/keycloak-client";
+import { randomUUID } from "crypto";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
 
 const sendMail = async (email: string, message: string) => {
-  console.log(email, message);
+  console.log("sendMail:", email, message);
 };
 
 /**
@@ -21,7 +23,6 @@ const app = new Hono().post(
       email: z.string().email(),
     });
 
-    console.log(value);
     const result = schema.safeParse(value);
 
     if (!result.success) {
@@ -76,7 +77,7 @@ const app = new Hono().post(
       return c.json({
         success: true,
         message:
-          "入力されたメールアドレスに確認メールを送信しました。\nメールの指示に従って登録を完了してください。",
+          "[既存ユーザー] 入力されたメールアドレスに確認メールを送信しました。\nメールの指示に従って登録を完了してください。",
       });
     }
     /**
@@ -86,13 +87,28 @@ const app = new Hono().post(
      * ご登録いただきありがとうございます。
      * 以下のボタンをクリックしてメールアドレスを認証し、登録手続きを完了してください。
      */
+
+    // IdPにユーザーを作成する
+    await kc.createUser({
+      email,
+      enabled: true,
+    });
+
+    // DBにユーザーとトークンを紐づけて保存する
+    const newDbUser = await db.createUser(email);
+
+    // トークン付きURLを生成する
+    const token = newDbUser.verificationToken?.token;
+    const url = `${env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${token}`;
+    console.log(url);
+
     const message = "ご登録いただきありがとうございます。";
     await sendMail(email, message);
 
     return c.json({
       success: true,
       message:
-        "入力されたメールアドレスに確認メールを送信しました。\nメールの指示に従って登録を完了してください。",
+        "[新規作成] 入力されたメールアドレスに確認メールを送信しました。\nメールの指示に従って登録を完了してください。",
     });
   }
 );
