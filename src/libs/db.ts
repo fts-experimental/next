@@ -12,4 +12,4 @@ const db = global.prisma ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== "production") global.prisma = db;
 
-export default db;
+export { db };

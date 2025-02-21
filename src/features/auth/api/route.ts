@@ -1,4 +1,4 @@
-import { findUser } from "@/libs/db-queries";
+import { db } from "@/libs/db-queries";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { z } from "zod";
@@ -39,9 +39,11 @@ const app = new Hono().post(
   async (c) => {
     const { email } = c.req.valid("form");
 
-    const user = await findUser(email);
+    // DBにユーザーが存在するか確認
+    const dbUser = await db.findUser(email);
 
-    if (user) {
+    if (dbUser) {
+      // IdPにユーザーが存在するか確認
       /**
        * ユーザーが存在する場合
        * ユーザーのメールアドレスに、メールアドレスが入力されたことを知らせるメールを送信する。

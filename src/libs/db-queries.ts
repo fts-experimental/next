@@ -1,9 +1,13 @@
-import db from "@/libs/db";
+import { db as database } from "@/libs/db";
 
-export const findUser = async (email: string) => {
-  const user = await db.user.findUnique({
+const findUser = async (email: string) => {
+  const user = await database.user.findUnique({
     where: { email },
   });
 
   return user;
+};
+
+export const db = {
+  findUser,
 };
