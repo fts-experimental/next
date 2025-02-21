@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/query-provider";
+import { YamadaUIScript } from "@/components/yamada-ui-script";
+import { YamadaUIProvider } from "@/components/yamada-ui-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,11 +26,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    /**
+     * ハイドレーションエラーへの一時的な対処。
+     * html、bodyタグに「suppressHydrationWarning」を追加する。
+     * @see https://github.com/yamada-ui/yamada-ui/issues/3363
+     */
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
-        <QueryProvider>{children}</QueryProvider>
+        <YamadaUIScript />
+        <YamadaUIProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </YamadaUIProvider>
       </body>
     </html>
   );
