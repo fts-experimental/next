@@ -4,6 +4,7 @@ import { keycloakClient as kc } from "@/libs/keycloak-client";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
 import { RegisterFormSchema } from "@/features/auth/form/register/types";
+import { validateToken } from "@/libs/recaptcha";
 
 const sendMail = async (email: string, message: string) => {
   console.log("sendMail:", email, message);
@@ -34,7 +35,22 @@ const app = new Hono().post(
     return result.data;
   }),
   async (c) => {
-    const { email } = c.req.valid("form");
+    // バリデーションを通過したデータを取得
+    const { email, recaptchaToken } = c.req.valid("form");
+
+    // reCAPTCHAトークンを検証
+    const recaptchaResult = await validateToken(recaptchaToken);
+    // const recaptchaResult = true;
+
+    if (!recaptchaResult) {
+      return c.json(
+        {
+          success: false,
+          message: "reCAPTCHA validation failed",
+        },
+        400
+      );
+    }
 
     // DBにユーザーが存在するか確認
     const dbUser = await db.findUser(email);
