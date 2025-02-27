@@ -16,6 +16,9 @@ test:
 type:
 	docker compose -f docker-compose.dev.yml exec exp-next-app yarn tsc
 
+studio:
+	docker compose -f docker-compose.dev.yml exec exp-next-app yarn prisma studio
+
 summary:
 	echo src | python3 generate_project_summary.py
 
