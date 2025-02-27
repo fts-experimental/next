@@ -12,6 +12,7 @@ describe("/auth/register", () => {
       method: "POST",
       body: new URLSearchParams({
         email: "test@example.com",
+        recaptchaToken: "dummy-token",
       }),
     });
 
@@ -30,6 +31,7 @@ describe("/auth/register", () => {
       method: "POST",
       body: new URLSearchParams({
         email: `${randomUUID()}@example.com`,
+        recaptchaToken: "dummy-token",
       }),
     });
 

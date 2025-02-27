@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/components/query-provider";
 import { YamadaUIScript } from "@/components/yamada-ui-script";
 import { YamadaUIProvider } from "@/components/yamada-ui-provider";
+import { ReCaptchaProvider } from "next-recaptcha-v3";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,9 @@ export default function RootLayout({
       >
         <YamadaUIScript />
         <YamadaUIProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <ReCaptchaProvider>{children}</ReCaptchaProvider>
+          </QueryProvider>
         </YamadaUIProvider>
       </body>
     </html>

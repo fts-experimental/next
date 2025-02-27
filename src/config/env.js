@@ -25,6 +25,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: z.string(),
   },
 
   /**
@@ -34,6 +35,7 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_RECAPTCHA_SITE_KEY: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
     KEYCLOAK_BASE_URL: process.env.KEYCLOAK_BASE_URL,
     KEYCLOAK_REALM: process.env.KEYCLOAK_REALM,
     KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,

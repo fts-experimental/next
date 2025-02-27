@@ -1,10 +1,9 @@
 import { env } from "@/config/env";
 import { db } from "@/libs/db-queries";
 import { keycloakClient as kc } from "@/libs/keycloak-client";
-import { randomUUID } from "crypto";
 import { Hono } from "hono";
 import { validator } from "hono/validator";
-import { z } from "zod";
+import { RegisterFormSchema } from "@/features/auth/form/register/types";
 
 const sendMail = async (email: string, message: string) => {
   console.log("sendMail:", email, message);
@@ -19,11 +18,7 @@ const sendMail = async (email: string, message: string) => {
 const app = new Hono().post(
   "/register",
   validator("form", (value, c) => {
-    const schema = z.object({
-      email: z.string().email(),
-    });
-
-    const result = schema.safeParse(value);
+    const result = RegisterFormSchema.safeParse(value);
 
     if (!result.success) {
       return c.json(

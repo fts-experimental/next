@@ -5,7 +5,7 @@ import type { InferResponseType } from "hono";
 
 export const useHello = () => {
   type ResType = InferResponseType<typeof client.api.hello.$get>;
-  const url = client.api.hello.$url();
+  const url = "/api/hello";
 
   return useQuery({
     queryKey: ["hello"],
